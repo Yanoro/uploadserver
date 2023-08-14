@@ -184,8 +184,12 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         
         if self.path == '/upload':
             send_upload_page(self)
-        else:
-            super().do_GET()
+
+        # Don't list directory
+        if os.path.isdir(self.directory + self.path):
+            self.path = '/non_existent_page.html'
+        super().do_GET()
+
     
     def do_POST(self):
         if not check_http_authentication(self): return
